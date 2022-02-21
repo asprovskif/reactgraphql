@@ -1,26 +1,38 @@
-const gitHubQuery = {
+const gitHubQuery = (pageCount, queryString, paginationKeyWord, paginationString) => {
+  return {
     query: `
     {
       viewer {
         name
       }
-      search(query: "user:asprovskif sort:updated-desc", type: REPOSITORY, first: 10) {
-        nodes {
-          ... on Repository {
-            name
-            description
-            id
-            url
-            viewerSubscription
-            licenseInfo {
-              spdxId
+      search(query: "${queryString} user:asprovskif sort:updated-desc", type: REPOSITORY, ${paginationKeyWord}: ${pageCount}, ${paginationString}) {
+        repositoryCount
+        edges {
+          cursor 
+          node {
+            ... on Repository {
+              name
+              description
+              id
+              url
+              viewerSubscription
+              licenseInfo {
+                spdxId
+              }
             }
           }
         }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+
       }
     }
     `,
   };
+};
 
-
-  export default gitHubQuery;
+export default gitHubQuery;
