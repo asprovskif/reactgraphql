@@ -3,11 +3,12 @@ import gitHubQuery from "./Query";
 import { useEffect, useState, useCallback } from "react";
 import RepoInfo from './RepoInfo'
 import SearchBox from "./SearchBox";
+import NavButtons from "./NavButtons";
 
 function App() {
   let [userName, setUserName] = useState("");
   let [repoList, setRepoList] = useState(null);
-  let [pageCount, setPageCount] = useState(10);
+  let [pageCount, setPageCount] = useState(2);
   let [queryString, setQueryString] = useState("");
   let [totalCount, setTotalCount] = useState(null);
   let [startCursor, setStartCursor] = useState(null);
@@ -44,7 +45,7 @@ function App() {
         setHasPreviousPage(prev);
       })
       .catch((err) => {
-        console.log("eeeeeee", err);
+        console.log(err);
       });
   }, [pageCount, queryString, paginationKeyWord, paginationString]);
 
@@ -65,6 +66,11 @@ function App() {
         onQueryChange={(myString) => {setQueryString(myString)}}
         onTotalChange={(myCount) => {setPageCount(myCount)}}
       />
+      <NavButtons start={startCursor}  end={endCursor} next={hasNextPage} previous={hasPreviousPage}
+       onPage={(myKeyword, myString) => {
+          setPaginationKeyWord(myKeyword);
+          setPaginationString(myString);
+      }}  />
       {
         repoList && (
           <ul className="list-group list-group-flush" >
@@ -76,6 +82,11 @@ function App() {
           </ul>
         )
       }
+      <NavButtons start={startCursor}  end={endCursor} next={hasNextPage} previous={hasPreviousPage}
+       onPage={(myKeyword, myString) => {
+          setPaginationKeyWord(myKeyword);
+          setPaginationString(myString);
+      }}  />
     </div>
   );
 }
